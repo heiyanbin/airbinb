@@ -1,60 +1,23 @@
-__author__ = 'heiyanbin'
+from copy import deepcopy
 
-def minCostPath(lines, src, dst, maxStops):
-    adj = {}
-    for line in lines:
-        (a, b, cost) = line
-        if a not in adj:
-            adj[a] = []
-        adj[a].append((b, cost))
+def f(n):
+    if n < 2: return 1
+    return f(n -1) + f(n - 2);
 
-    v = 1
-    minPath = []
-    minCost = 10000
-    def f():
-        minCost = 'ff'
-        print v, minCost
+def group(A, k):
+    if k == 1:return [[A[:]]]
+    if k == len(A): return [map(lambda x: [x], A)]
+    last = A.pop()
+    groupings = group(A, k - 1)
+    for grouping in groupings: grouping.append([last])
 
-    def f2():
-        minCost = 1
-        if v == dst:
-            minCost = cost
-            minPath = path[:]
-        elif v in adj and len(path) < maxStops:
-            for line in adj[v]:
-                if line[0] not in path and cost + line[1] < minCost:
-                    dfs(line[0], cost + line[1], path + [line[0]])
-    f()
+    for grouping in group(A, k):
+        for g in grouping:
+            g.append(last)
+            groupings.append(deepcopy(grouping))
+            g.pop()
+    A.append(last)
+    return groupings
 
-def minCostPath(lines, src, dst, maxStops):
-    adj = {}
-    for line in lines:
-        (a, b, cost) = line
-        if a not in adj:
-            adj[a] = []
-        adj[a].append((b, cost))
-
-    minPath = []
-    minCost = 10000
-    s = 0
-    def dfs(v, cost, path):
-        minCost = 1
-        if v == dst:
-            minCost = cost
-            minPath = path[:]
-        elif v in adj and len(path) < maxStops:
-            for line in adj[v]:
-                if line[0] not in path and cost + line[1] < minCost:
-                    dfs(line[0], cost + line[1], path + [line[0]])
-
-    dfs(src, 0, [src])
-
-    def f():
-        s = 2
-    f()
-    return minPath, minCost, s
-
-lines = [('BJ', 'SH', 100), ('SH', 'XA', 200), ('BJ', 'XA', 500), ('TJ', 'SH', 200), ('TJ', 'XA', 50)]
-
-print(minCostPath(lines, 'BJ', 'XA', 2))
-test()
+for grouping in group([1, 2, 3, 4], 2):
+    print grouping
