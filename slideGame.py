@@ -38,7 +38,45 @@ def slide(A):
                 mat[x][y], mat[i][j] = mat[i][j], mat[x][y]
     return None
 
-print slide([[7, 2, 3], [4, 5, 6], [1, 8, 0]])
+def jigsawPuzzle(self, matrix):
+    # Write your code here
+    def toString(mat):
+        res = []
+        for i in range(3):
+            for j in range(3):
+                res.append(str(mat[i][j]))
+        return ''.join(res)
 
+    def fromString(sequence):
+        mat = [[''] * 3 for _ in range(3)]
+        for i in range(len(sequence)):
+            mat[i / 3][i % 3] = sequence[i]
+        return mat
 
+    marked = set()
 
+    def dfs(v):
+        marked.add(v)
+        print marked
+        if v == '123456780': return True
+        mat = fromString(v)
+        k = v.index('0')
+        i, j = k / 3, k % 3
+        for dir in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+            x, y = i + dir[0], j + dir[1]
+            if x >= 0 and x < 3 and y >= 0 and y < 3:
+                mat[i][j], mat[x][y] = mat[x][y], mat[i][j]
+                u = toString(mat)
+                if u not in marked:
+                    if dfs(u): return True
+                mat[i][j], mat[x][y] = mat[x][y], mat[i][j]
+        return False
+
+    return 'YES' if dfs(toString(matrix)) else 'NO'
+
+a = [[4,0,2],[5,3,8],[6,1,7]]
+
+import sys
+sys.setrecursionlimit(1000)
+print sys.getrecursionlimit()
+print (jigsawPuzzle(0, a))

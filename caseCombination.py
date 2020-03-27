@@ -7,8 +7,9 @@ def caseCombination(s):
             ans.append(path)
         else:
             dfs(i + 1, path + s[i].lower())
-            dfs(i + 1, path + s[i].upper())
+            if s[i].isalpha():
+                dfs(i + 1, path + s[i].upper())
     dfs(0, '')
     return ans
 
-print caseCombination('abc')
+print caseCombination('ab_')
